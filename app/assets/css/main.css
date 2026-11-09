@@ -1,0 +1,10 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+/* Prevent iOS Safari auto-zoom on focus (requires >= 16px font on form controls) */
+@media (max-width: 639px) {
+  input, select, textarea { font-size: 16px !important; }
+}
+
+html { -webkit-text-size-adjust: 100%; }
+body { overscroll-behavior-y: none; }

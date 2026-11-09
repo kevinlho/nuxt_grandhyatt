@@ -149,3 +149,37 @@ Filters: search, status (default Active), category, department. Totals count act
 | GET | /assets?page&pageSize&search&status&category&departmentId | `Paginated<Asset>` |
 | POST | /assets | `AssetInput` → 409 if tag exists |
 | PUT | /assets/:id | `AssetInput` (also used to deprecate/restore) |
+
+## Document Library
+
+`/documents` — employees upload files; each file is **auto-sorted** into a document type using that type's keywords
+(`utils/documents.ts` → `suggestCategory`; longest matching keyword wins, images fall back to `media`, everything else to `other`),
+which the uploader confirms. Browse by category folder, search (title, file name, tags), filter (department, file type,
+my uploads, archived), sort (newest/oldest/name/size), list or grid view, preview PDF/images, download.
+Uploader or `documents.manage` can edit details and archive/restore (no hard delete).
+
+Visibility: `everyone`, or `department` = same department, the uploader, or `documents.manage`.
+
+| Permission | Allows | Default roles |
+|---|---|---|
+| `documents.view` | browse, preview, download | all roles |
+| `documents.upload` | upload; edit/archive own files | Admin, CEO, Manager, Employee, Editor |
+| `documents.manage` | edit/archive any file, see every department | Admin, CEO, Manager |
+| `documents.types` | manage document types | Admin, Manager |
+
+| Method | Path | |
+|---|---|---|
+| GET | /documents?page&pageSize&search&category&departmentId&kind&status&sort&mine | `Paginated<DocumentFile>` (visibility enforced server-side) |
+| GET | /documents/counts?(same filters, no category) | `{ sop: 4, policy: 2, … }` |
+| GET | /documents/:id | |
+| POST | /documents (multipart: file, title, description, category, tags[], departmentId, visibility) | `DocumentFile` with `url` |
+| PUT | /documents/:id | `DocumentMeta` |
+| POST | /documents/:id/archive · /restore | |
+| CRUD | /document-types | `DocumentTypeInput { key, name, icon, description, keywords[], isActive }` |
+
+**Document types** (`/documents/types`): add / edit / activate-deactivate / delete. The key is locked once documents use it;
+delete is refused while documents use the type (deactivate instead — no new uploads, existing files keep it).
+The form has a "test a file name" box that previews which type the keywords would pick.
+
+Next phase (AI Copilot reference): on publish, the backend extracts text (Docling/OCR) → chunks → embeddings (bge-m3) → pgvector,
+keeping `departmentId`/`visibility` on each chunk so retrieval respects the same access rules.

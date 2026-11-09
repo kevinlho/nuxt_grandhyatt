@@ -14,6 +14,7 @@ export interface AuthUser {
   roleName?: string
   /** role.level in the approval hierarchy */
   roleLevel?: number
+  departmentId?: string | null
   /** resolved permissions of the role; '*' = all */
   permissions: PermissionGrant[]
 }

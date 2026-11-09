@@ -14,6 +14,10 @@ const groups: { label?: string; links: NavLink[] }[] = [
   { label: 'AI', links: [
     { label: 'Assistant', icon: 'i-lucide-sparkles', to: '/assistant', permission: 'chatbot.use' }
   ] },
+  { label: 'Knowledge', links: [
+    { label: 'Documents', icon: 'i-lucide-library', to: '/documents', permission: 'documents.view' },
+    { label: 'Document Types', icon: 'i-lucide-tags', to: '/documents/types', permission: 'documents.types' }
+  ] },
   { label: 'Workflow', links: [
     { label: 'Requests', icon: 'i-lucide-git-pull-request-arrow', to: '/workflows', permission: ['workflows.create', 'workflows.approve', 'workflows.view_all'], badge: 'inbox' },
     { label: 'Approval Flows', icon: 'i-lucide-route', to: '/workflows/templates', permission: 'workflows.manage' }

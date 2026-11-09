@@ -36,6 +36,11 @@ export function validateAsset(i: import('~/types/asset').AssetInput) {
   if (i.value != null && i.value < 0) return 'Value cannot be negative'
 }
 
+export function validateDocumentType(i: import('~/types/document').DocumentTypeInput) {
+  if (!i.name.trim()) return 'Name is required'
+  if (!/^[a-z][a-z0-9_-]{1,30}$/.test(i.key)) return 'Key must be lowercase letters, numbers, - or _'
+}
+
 export function validateRole(i: import('~/types/rbac').RoleInput) {
   if (!i.name.trim()) return 'Name is required'
   if (!/^[a-z][a-z0-9_]*$/.test(i.key)) return 'Key must be lowercase letters, numbers or _'

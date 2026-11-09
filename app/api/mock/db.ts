@@ -27,16 +27,20 @@ export const roles: Role[] = [
   { id: uid(), key: 'admin', name: 'Administrator', level: 99, permissions: ['*'], isSystem: true, createdAt: ago(60) },
   { id: uid(), key: 'ceo', name: 'CEO', level: 3, createdAt: ago(60), permissions: [
     'users.view', 'departments.view', 'assets.view', 'roles.view', 'products.view', 'orders.view',
-    'workflows.create', 'workflows.approve', 'workflows.view_all', 'chatbot.use'] },
+    'workflows.create', 'workflows.approve', 'workflows.view_all', 'chatbot.use',
+    'documents.view', 'documents.upload', 'documents.manage'] },
   { id: uid(), key: 'manager', name: 'Manager', level: 2, createdAt: ago(60), permissions: [
     'users.view', 'departments.view', 'assets.view', 'assets.create', 'assets.edit', 'assets.deprecate', 'products.view', 'products.manage', 'orders.view', 'orders.manage',
-    'workflows.create', 'workflows.approve', 'chatbot.use'] },
+    'workflows.create', 'workflows.approve', 'chatbot.use',
+    'documents.view', 'documents.upload', 'documents.manage', 'documents.types'] },
   { id: uid(), key: 'employee', name: 'Employee', level: 1, createdAt: ago(60), permissions: [
-    'assets.view', 'products.view', 'orders.view', 'workflows.create', 'chatbot.use'] },
+    'assets.view', 'products.view', 'orders.view', 'workflows.create', 'chatbot.use',
+    'documents.view', 'documents.upload'] },
   { id: uid(), key: 'editor', name: 'Editor', level: 0, createdAt: ago(60), permissions: [
-    'assets.view', 'assets.create', 'assets.edit', 'products.view', 'products.manage', 'orders.view', 'orders.manage', 'chatbot.use'] },
+    'assets.view', 'assets.create', 'assets.edit', 'products.view', 'products.manage', 'orders.view', 'orders.manage', 'chatbot.use',
+    'documents.view', 'documents.upload'] },
   { id: uid(), key: 'viewer', name: 'Viewer', level: 0, createdAt: ago(60), permissions: [
-    'products.view', 'orders.view'] }
+    'products.view', 'orders.view', 'documents.view'] }
 ]
 
 const seedRoles = ['employee', 'manager', 'editor', 'viewer', 'employee'] as const

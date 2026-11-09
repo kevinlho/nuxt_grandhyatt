@@ -5,6 +5,7 @@ import type { User, UserInput } from '~/types/user'
 import type { Role, RoleInput } from '~/types/rbac'
 import type { Department, DepartmentInput } from '~/types/department'
 import type { Asset, AssetInput } from '~/types/asset'
+import type { DocumentType, DocumentTypeInput } from '~/types/document'
 import type { WorkflowTemplate, WorkflowTemplateInput } from '~/types/workflow'
 import { totalStock } from '~/types/product'
 import { tokenStorage } from '~/utils/tokenStorage'
@@ -12,6 +13,8 @@ import { authApi } from './auth'
 import { crudApi } from './crud'
 import { workflowApi } from './workflow'
 import { chatApi } from './chat'
+import { documentApi } from './documents'
+import { documentTypes, documents as docRows, mockDocumentApi } from './mock/documents'
 import { mockChatApi } from './mock/chat'
 import { mockAuthApi } from './mock/auth'
 import { mockCrud } from './mock/crud'
@@ -87,7 +90,30 @@ export function createApi(http: AxiosInstance, useDummy: boolean, chatApiUrl?: s
         }
       })(),
       workflows: mockWorkflowApi,
-      chat: mockChatApi
+      chat: mockChatApi,
+      documents: mockDocumentApi,
+      documentTypes: (() => {
+        const c = mockCrud<DocumentType, DocumentTypeInput>(documentTypes, {
+          label: 'Document type', searchFields: ['name', 'key', 'description'],
+          unique: (rows, i, id) =>
+            rows.some(r => r.key === i.key && r.id !== id) ? 'Key already exists'
+            : rows.some(r => r.name?.toLowerCase() === i.name?.toLowerCase() && r.id !== id) ? 'Name already exists' : undefined
+        })
+        return {
+          ...c,
+          async update(id: string, input: DocumentTypeInput) {
+            const cur = documentTypes.find(x => x.id === id)
+            if (cur && cur.key !== input.key && docRows.some(d => d.category === cur.key)) throw new Error('Key cannot change while documents use this type')
+            return c.update(id, input)
+          },
+          async remove(id: string) {
+            const cur = documentTypes.find(x => x.id === id)
+            const n = cur ? docRows.filter(d => d.category === cur.key).length : 0
+            if (n) throw new Error(`${n} document(s) use this type — move them or deactivate the type instead`)
+            return c.remove(id)
+          }
+        }
+      })()
     }
   }
   return {
@@ -100,7 +126,9 @@ export function createApi(http: AxiosInstance, useDummy: boolean, chatApiUrl?: s
     orders: crudApi<Order, OrderStatusInput>(http, '/orders'),
     workflowTemplates: crudApi<WorkflowTemplate, WorkflowTemplateInput>(http, '/workflow-templates'),
     workflows: workflowApi(http),
-    chat: chatApi(http, chatApiUrl || undefined)
+    chat: chatApi(http, chatApiUrl || undefined),
+    documents: documentApi(http),
+    documentTypes: crudApi<DocumentType, DocumentTypeInput>(http, '/document-types')
   }
 }
 

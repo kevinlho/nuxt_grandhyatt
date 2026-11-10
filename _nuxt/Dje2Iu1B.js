@@ -1,0 +1,1 @@
+var e={pending:`warning`,approved:`success`,rejected:`error`,cancelled:`neutral`,completed:`info`},t={pending:`warning`,approved:`success`,rejected:`error`,skipped:`neutral`,waiting:`neutral`};export{e as n,t};

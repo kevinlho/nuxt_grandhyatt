@@ -1,0 +1,1 @@
+import{t as e}from"./DXcxD1Ui.js";import{t}from"./DOfWIN8G.js";function n(){let{user:n}=e();return{can:e=>t(n.value?.permissions,e),isRole:e=>n.value?.role===e,user:n}}export{n as t};

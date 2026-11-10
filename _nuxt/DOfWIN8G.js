@@ -1,0 +1,1 @@
+function e(e,t){return e?.length?e.includes(`*`)?!0:(Array.isArray(t)?t:[t]).some(t=>e.includes(t)):!1}export{e as t};

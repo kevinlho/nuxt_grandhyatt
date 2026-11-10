@@ -1,0 +1,1 @@
+var e=[`pending`,`paid`,`shipped`,`completed`,`cancelled`],t={pending:`warning`,paid:`info`,shipped:`primary`,completed:`success`,cancelled:`neutral`};export{t as n,e as t};
